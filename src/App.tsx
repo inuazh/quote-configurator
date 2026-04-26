@@ -1,6 +1,8 @@
 import "./App.css";
 import { useForm } from "react-hook-form";
 import type { FormValues } from "./types/quote";
+import { ClientBlock } from "./components/ClientBlock";
+import { Button, Container } from "@mui/material";
 
 const defaultValidUntil = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
@@ -8,6 +10,9 @@ function App() {
   const {
     register,
     handleSubmit,
+    control,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -18,36 +23,33 @@ function App() {
       validUntil: defaultValidUntil,
       paymentTerms: "prepaid",
     },
+    mode: "onBlur", 
   });
 
   const onSubmit = (data: FormValues) => {
-    console.log(data);
+    console.log("Форма отправлена:", data);
   };
 
   return (
-    <>
-      <form action="" onSubmit={handleSubmit(onSubmit)}>
-        <input
-          type="text"
-          {...register("clientContactPerson", { required: "Введите ФИО" })}
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <h1>Конфигуратор КП</h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <ClientBlock
+          register={register}
+          control={control}
+          errors={errors}
+          setValue={setValue}
+          watch={watch}
         />
-        {errors.clientContactPerson && (
-          <span> {errors.clientContactPerson.message}</span>
-        )}
-        <input
-          type="email"
-          {...register("clientEmail", {
-            required: "Введите email",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Некорректный email",
-            },
-          })}
-        />
-        {errors.clientEmail && <span> {errors.clientEmail.message}</span>}
-        <button type="submit">sub</button>
+
+        {/* todo: Itemsblock позиции КП */}
+        {/*  итоги */}
+
+        <Button type="submit" variant="contained" size="large">
+          Сохранить КП
+        </Button>
       </form>
-    </>
+    </Container>
   );
 }
 

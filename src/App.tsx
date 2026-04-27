@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import type { FormValues } from "./types/quote";
 import { ClientBlock } from "./components/ClientBlock";
 import { Button, Container } from "@mui/material";
+import { ItemsBlock } from "./components/ItemsBlock";
 
 const defaultValidUntil = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
@@ -22,8 +23,9 @@ function App() {
       currency: "RUB",
       validUntil: defaultValidUntil,
       paymentTerms: "prepaid",
+      items: [],
     },
-    mode: "onBlur", 
+    mode: "onBlur",
   });
 
   const onSubmit = (data: FormValues) => {
@@ -42,7 +44,7 @@ function App() {
           watch={watch}
         />
 
-        {/* todo: Itemsblock позиции КП */}
+        <ItemsBlock register={register} control={control} errors={errors} />
         {/*  итоги */}
 
         <Button type="submit" variant="contained" size="large">

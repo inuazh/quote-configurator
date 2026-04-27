@@ -7,6 +7,7 @@ import {
 import { Box, Button, IconButton, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { FormValues } from "../types/quote";
+import React from "react";
 
 type ItemsBlockProps = {
   control: Control<FormValues>;
@@ -19,8 +20,6 @@ export function ItemsBlock({ control, register, errors }: ItemsBlockProps) {
     control,
     name: "items",
   });
-
-//   console.log("fields:", fields);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 4 }}>
@@ -39,10 +38,41 @@ export function ItemsBlock({ control, register, errors }: ItemsBlockProps) {
       >
         Добавить позицию
       </Button>
-
       <div>
         {fields.map((field, index) => (
-          <div key={field.id}>позиция{index + 1}</div>
+          <React.Fragment key={field.id}>
+            <TextField
+              label="Количество"
+              {...register(`items.${index}.quantity`, {
+                required: "Обязательно",
+                min: { value: 1, message: "Больше 0" },
+                valueAsNumber: true,
+              })}
+              error={!!errors.items?.[index]?.quantity}
+              helperText={errors.items?.[index]?.quantity?.message}
+            />
+            <TextField
+              label="цена"
+              {...register(`items.${index}.unitPrice`, {
+                required: "Обязательно",
+                min: { value: 0.01, message: "цена не может быть 0" },
+                valueAsNumber: true,
+              })}
+              error={!!errors.items?.[index]?.unitPrice}
+              helperText={errors.items?.[index]?.unitPrice?.message}
+            />
+            <TextField
+              label="Скидка"
+              {...register(`items.${index}.discount`, {
+                min: { value: 0, message: "Не меньше 0" },
+                max: { value: 30, message: "До 30%" },
+                valueAsNumber: true,
+              })}
+              error={!!errors.items?.[index]?.discount}
+              helperText={errors.items?.[index]?.discount?.message}
+            />
+            <div>позиция{index + 1}</div>
+          </React.Fragment>
         ))}
       </div>
     </Box>

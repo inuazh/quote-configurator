@@ -44,7 +44,7 @@ function App() {
           watch={watch}
         />
 
-        <ItemsBlock register={register} control={control} errors={errors} />
+        <ItemsBlock register={register} setValue={setValue} control={control} errors={errors} />
         {/*  итоги */}
 
         <Button type="submit" variant="contained" size="large">

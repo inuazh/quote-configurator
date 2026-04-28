@@ -1,4 +1,5 @@
 export type Product = { id: string; name: string; basePrice: number }
+// import type { Client } from "../mock/api"
 
 
 export type QuoteItem ={
@@ -9,9 +10,17 @@ export type QuoteItem ={
   totalPrice: number,
 }
 
+ export type Client = {
+  id: string;
+  name: string;
+  contactPerson: string;
+  email: string;
+  status: "active" | "blocked";
+};
+
 
 export type FormValues = {
-  client: { id: string; name: string } | null;
+  client: Client | null;
   clientEmail: string;
   clientContactPerson: string;
   currency: "RUB" | "USD" | "EUR";

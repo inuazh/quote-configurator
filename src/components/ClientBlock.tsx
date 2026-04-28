@@ -1,5 +1,3 @@
-
-
 import {
   Controller,
   type Control,
@@ -22,59 +20,16 @@ import {
 } from "@mui/material";
 
 
+
+import {searchClients} from "../mocks/api"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
 import { useEffect, useState } from "react";
-import type { FormValues } from "../types/quote";
+import type { FormValues, Client } from "../types/quote";
 import { CURRENCY_OPTIONS, PAYMENT_TERMS_OPTIONS } from "../constants/quote";
-
-
-
-type Client = {
-  id: string;
-  name: string;
-  contactPerson: string;
-  email: string;
-  status: "active" | "blocked";
-};
-
-const MOCK_CLIENTS: Client[] = [
-  {
-    id: "1",
-    name: "ROGA&COPYTA`S+ LLC",
-    contactPerson: "Иван Петров",
-    email: "ivan@roga.ru",
-    status: "active",
-  },
-  {
-    id: "2",
-    name: "ЗАО МММ",
-    contactPerson: "Мария Моковна",
-    email: "maria@maria.com",
-    status: "active",
-  },
-  {
-    id: "3",
-    name: "ООО ЫЫЫ",
-    contactPerson: "Петр Смирнов",
-    email: "petr@garbage.ru",
-    status: "blocked",
-  },
-];
-
-const searchClients = (query: string): Promise<Client[]> =>
-  new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(
-        MOCK_CLIENTS.filter((c) =>
-          c.name.toLowerCase().includes(query.toLowerCase()),
-        ),
-      );
-    }, 300);
-  });
 
 
 type ClientBlockProps = {

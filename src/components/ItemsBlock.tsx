@@ -3,19 +3,24 @@ import {
   type Control,
   type UseFormRegister,
   type FieldErrors,
+  Controller,
+  type UseFormSetValue,
 } from "react-hook-form";
-import { Box, Button, IconButton, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField, Autocomplete } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { FormValues } from "../types/quote";
 import React from "react";
+
+import { MOCK_PRODUCTS } from "../mocks/api";
 
 type ItemsBlockProps = {
   control: Control<FormValues>;
   register: UseFormRegister<FormValues>;
   errors: FieldErrors<FormValues>;
+  setValue: UseFormSetValue<FormValues>;
 };
 
-export function ItemsBlock({ control, register, errors }: ItemsBlockProps) {
+export function ItemsBlock({ control, register, errors, setValue }: ItemsBlockProps) {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "items",
@@ -41,6 +46,33 @@ export function ItemsBlock({ control, register, errors }: ItemsBlockProps) {
       <div>
         {fields.map((field, index) => (
           <React.Fragment key={field.id}>
+            <Controller
+              name={`items.${index}.product`}
+              control={control}
+              rules={{ required: "Выберите товар" }}
+              render={({ field, fieldState }) => (
+                <Autocomplete
+                  value={field.value}
+                  onChange={(_, newValue) => {
+                    field.onChange(newValue);
+                    if (newValue) {
+                      setValue(`items.${index}.unitPrice`, newValue.basePrice);
+                    }
+                  }}
+                  options={MOCK_PRODUCTS}
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(opt, val) => opt.id === val?.id}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Товар"
+                      error={!!fieldState.error}
+                      helperText={fieldState.error?.message}
+                    />
+                  )}
+                />
+              )}
+            />
             <TextField
               label="Количество"
               {...register(`items.${index}.quantity`, {
@@ -71,6 +103,11 @@ export function ItemsBlock({ control, register, errors }: ItemsBlockProps) {
               error={!!errors.items?.[index]?.discount}
               helperText={errors.items?.[index]?.discount?.message}
             />
+            {fields.length > 1 && (
+              <IconButton onClick={() => remove(index)}>
+                <DeleteIcon />
+              </IconButton>
+            )}
             <div>позиция{index + 1}</div>
           </React.Fragment>
         ))}
